@@ -40,7 +40,8 @@ class ThreadLocalStore {
  public:
   /*! \return get a thread local singleton */
   static T* Get() {
-    static MX_TREAD_LOCAL T* ptr = nullptr;
+    //static MX_TREAD_LOCAL T* ptr = nullptr;
+    static T* ptr = nullptr;
     if (ptr == nullptr) {
       ptr = new T();
       Singleton()->RegisterDelete(ptr);
