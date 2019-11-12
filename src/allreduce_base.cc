@@ -48,6 +48,7 @@ AllreduceBase::AllreduceBase(void) {
   env_vars.push_back("DMLC_TRACKER_PORT");
   env_vars.push_back("DMLC_WORKER_CONNECT_RETRY");
   env_vars.push_back("DMLC_WORKER_STOP_PROCESS_ON_ERROR");
+  env_vars.push_back("DMLC_RANK");
 }
 
 // initialization function
@@ -110,7 +111,8 @@ bool AllreduceBase::Init(int argc, char* argv[]) {
   }
 
   // clear the setting before start reconnection
-  this->rank = -1;
+  if (getenv("DMLC_RANK") == NULL)
+    this->rank = -1;
   //---------------------
   // start socket
   utils::Socket::Startup();
@@ -181,6 +183,7 @@ inline size_t ParseUnit(const char *name, const char *val) {
  * \param val parameter value
  */
 void AllreduceBase::SetParam(const char *name, const char *val) {
+  if (!strcmp(name, "DMLC_RANK")) rank = atoi(val);
   if (!strcmp(name, "rabit_tracker_uri")) tracker_uri = val;
   if (!strcmp(name, "rabit_tracker_port")) tracker_port = atoi(val);
   if (!strcmp(name, "rabit_task_id")) task_id = val;
